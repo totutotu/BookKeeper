@@ -8,7 +8,12 @@ import {
   NavItem,
   NavLink,
   Container,
-  Table
+  Table,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
 } from 'reactstrap';
 
 class App extends Component {
@@ -19,6 +24,12 @@ class App extends Component {
       books: [],
       searchRes: [],
     }
+  }
+
+  setSearchResults(results) {
+    this.setState({
+      searchRes: results
+    })
   }
 
   setVisible(componentName) {
@@ -40,12 +51,14 @@ class App extends Component {
           books: results
         })
       })
-}
+  }
 
   render() {
     let visiblePageComponent = () => {
       if(this.state.visible=="SearchPage") {
-        return <SearchPage />
+        return <SearchPage
+                searchRes={this.state.searchRes}
+                setSearchResults={this.setSearchResults.bind(this)}/>
       } else if (this.state.visible=="BooksPage") {
         return <BooksPage books={this.state.books} />
       } else {
@@ -91,14 +104,34 @@ class Header extends React.Component {
 
 
 class SearchPage extends React.Component {
+  search(e) {
+    e.preventDefault()
+    let form = e.target;
+    let data = form.elements['keyword'].value;
+    fetch('https://api.finna.fi/v1/search?lookfor=' + data)
+       .then( response => response.json() )
+       .then( results => {
+         this.props.setSearchResults(results)
+        })
+  }
+
   render(){
+    let searchRes = this.props.searchRes
     return (
       <div>
         <h2>Search</h2>
+        <Form onSubmit ={this.search.bind(this)}>
+          <FormGroup>
+            <Label for="keyword">Keyword</Label>
+            <Input type="text" name="keyword" id="keyword" />
+          </FormGroup>
+          <Button>Search</Button>
+        </Form>
       </div>
     )
   }
 }
+
 
 class BooksPage extends React.Component {
   render(){

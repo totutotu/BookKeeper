@@ -116,9 +116,6 @@ class BooksPage extends React.Component {
             {books.records.map(b => <tr key={b.id}><td>{b.title}</td></tr>)}
           </tbody>
         </Table>
-        {books.records[0].title}
-        {books.resultCount}
-
       </div>
     )
   }

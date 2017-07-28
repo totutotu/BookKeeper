@@ -43,7 +43,8 @@ class App extends Component {
 
 //Gets the initial data from the library public db
   componentWillMount() {
-    fetch('https://api.finna.fi/v1/search?lookfor=ruby+on+rails')
+    const addr = "https://api.finna.fi/v1/search?lookfor=ruby+on+rails";
+    fetch(addr)
      .then( response => response.json() )
      .then( results => {
         console.log(results)
@@ -51,6 +52,9 @@ class App extends Component {
           books: results
         })
       })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   render() {
@@ -78,7 +82,7 @@ class App extends Component {
   }
 }
 
-class Header extends React.Component {
+class Header extends React.Component {ls
   render() {
     return(
       <Navbar color="faded" light toggleable>
